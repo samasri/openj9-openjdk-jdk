@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1997, 2020, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 1997, 2021, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -140,6 +140,11 @@ abstract class FeedbackCipher {
      */
     abstract int encrypt(byte[] plain, int plainOffset, int plainLen,
                          byte[] cipher, int cipherOffset);
+
+    int encrypt(byte[] plain, int plainOffset, int length) {
+        throw new UnsupportedOperationException("encrypt(byte[],int,int) is not supported");
+    }
+
     /**
      * Performs encryption operation for the last time.
      *

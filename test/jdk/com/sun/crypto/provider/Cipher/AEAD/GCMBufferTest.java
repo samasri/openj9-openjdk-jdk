@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2021, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -62,7 +62,8 @@ public class GCMBufferTest implements Cloneable {
     int[] sizes;
     boolean incremental = false;
     // In some cases the theoretical check is too complicated to verify
-    boolean theoreticalCheck;
+    boolean theoreticalCheckUpdate;
+    boolean theoreticalCheckFinal;
     List<Data> dataSet;
     int inOfs = 0, outOfs = 0;
 
@@ -128,7 +129,8 @@ public class GCMBufferTest implements Cloneable {
     GCMBufferTest(String algo, List<dtype> ops) {
         this.algo = algo;
         this.ops = ops;
-        theoreticalCheck = true;
+        theoreticalCheckUpdate = false;
+        theoreticalCheckFinal = true;
         dataSet = datamap.get(algo);
     }
 
@@ -416,7 +418,7 @@ public class GCMBufferTest implements Cloneable {
                     default -> throw new Exception("Unknown op: " + v.name());
                 }
 
-                if (theoreticalCheck) {
+                if (theoreticalCheckUpdate) {
                     pbuflen += plen - rlen;
                     if (encrypt && rlen != theoreticallen) {
                         throw new Exception("Wrong update return len (" +
@@ -473,7 +475,7 @@ public class GCMBufferTest implements Cloneable {
                     default -> throw new Exception("Unknown op: " + v.name());
                 }
 
-                if (theoreticalCheck && rlen != olen - outOfs) {
+                if (theoreticalCheckFinal && rlen != olen - outOfs) {
                     throw new Exception("Wrong doFinal return len (" +
                         v.name() + "):  " + "rlen=" + rlen +
                         ", expected output len=" + (olen - outOfs));
@@ -569,7 +571,7 @@ public class GCMBufferTest implements Cloneable {
                 }
 
                 // Check that the theoretical return value matches the actual.
-                if (theoreticalCheck && encrypt && rlen != theorticallen) {
+                if (theoreticalCheckUpdate && encrypt && rlen != theorticallen) {
                     throw new Exception("Wrong update return len (" +
                         v.name() + "):  " + "rlen=" + rlen +
                         ", expected output len=" + theorticallen);
